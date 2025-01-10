@@ -1,7 +1,5 @@
 {% set name = "cluster-lensing" %}
 {% set version = "0.1.2" %}
-{% set hash_type = "sha256" %}
-{% set hash_value = "ed1474701aac80648c4483f8e66af2663c2be1493e7a003e08e4a9f594dfa6b9" %}
 
 package:
   name: '{{ name|lower }}'
@@ -9,27 +7,29 @@ package:
 
 source:
   fn: '{{ name }}-{{ version }}.tar.gz'
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  '{{ hash_type }}': '{{ hash_value }}'
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  'sha256': 'ed1474701aac80648c4483f8e66af2663c2be1493e7a003e08e4a9f594dfa6b9'
 
 build:
   noarch: python
-  number: 1
-  script: python -m pip install --no-deps --ignore-installed .
+  number: 2
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   host:
     - pip
-    - python
+    - python {{ python_min }}
     - setuptools
   run:
-    - python
+    - python >={{ python_min }}
     - numpy
-    - astropy
+    - astropy-base
     - scipy
     - pandas
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - clusterlensing
 
